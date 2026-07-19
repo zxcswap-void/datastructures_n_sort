@@ -28,16 +28,12 @@ struct HTable *create_table(size_t size) {
 	if (!table)
 		return NULL;
 
-	table->buckets = (struct Node **)malloc(sizeof(struct Node *) * size);
-
+	table->buckets = (struct Node **)calloc(size, sizeof(struct Node *));
 	if (!table->buckets) {
 		free(table);
 		return NULL;
 	}
 
-	for (size_t i = 0; i < size; i++) {
-		table->buckets[i] = NULL;
-	}
 	table->size = size;
 	return table;
 }
