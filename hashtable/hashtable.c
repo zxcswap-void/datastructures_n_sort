@@ -2,23 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-static unsigned int hash_djb2(const char *str) {
+static size_t hash_djb2(const char *str) {
 	if (str == NULL)
 		return 0;
 
 	const unsigned char *key = (const unsigned char *)str;
 
-	unsigned int hash = 5381;
+	size_t hash = 5381;
 
-	for (unsigned int c = 0; (c = *key++);) {
+	for (size_t c = 0; (c = *key++);) {
 		hash = ((hash << 5) + hash) + c;
 	}
 	return hash;
 }
 
-static unsigned int gethashindex(unsigned int hash, size_t size) {
-	return hash % size;
-}
+static size_t gethashindex(size_t hash, size_t size) { return hash % size; }
 
 struct HTable *create_table(size_t size) {
 	if (size == 0)
@@ -42,7 +40,7 @@ static struct Node *search_node(struct HTable *table, const char *key) {
 	if (!table || !key || key[0] == '\0')
 		return NULL;
 
-	unsigned int index = gethashindex(hash_djb2(key), table->size);
+	size_t index = gethashindex(hash_djb2(key), table->size);
 	struct Node *item = table->buckets[index];
 
 	while (item) {
@@ -75,7 +73,7 @@ bool insert(struct HTable *table, const char *key, int value) {
 		return true;
 	}
 
-	unsigned int index = gethashindex(hash_djb2(key), table->size);
+	size_t index = gethashindex(hash_djb2(key), table->size);
 
 	struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
 	if (!tmp) {
@@ -102,7 +100,7 @@ void noderemove(struct HTable *table, const char *key) {
 	if (!table || !key || key[0] == '\0')
 		return;
 
-	unsigned int index = gethashindex(hash_djb2(key), table->size);
+	size_t index = gethashindex(hash_djb2(key), table->size);
 
 	struct Node *current = table->buckets[index];
 	struct Node *previous = NULL;

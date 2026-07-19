@@ -2,7 +2,7 @@
 #define HASHTABLE_H
 
 #include <stdbool.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 struct Node {
 	char *key;
